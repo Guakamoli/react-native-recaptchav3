@@ -6,6 +6,8 @@ export type IProps = {
   onReceiveToken: (captchaToken: string) => void
   siteKey: string
   action: string
+  baseUrl: string
+
 }
 
 export type IState = {}
@@ -24,6 +26,7 @@ class ReCaptchaV3 extends React.PureComponent<IProps, IState> {
       <ReCaptchaComponent
         ref={ref => this._captchaRef = ref}
         action={this.props.action}
+        baseUrl={this.props.baseUrl}
         captchaDomain={this.props.captchaDomain}
         siteKey={this.props.siteKey}
         onReceiveToken={(token: string) => {

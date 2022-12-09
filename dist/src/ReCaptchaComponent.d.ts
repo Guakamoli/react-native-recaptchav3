@@ -4,6 +4,7 @@ declare type IProps = {
     onReceiveToken: (captchaToken: string) => void;
     siteKey: string;
     action: string;
+    baseUrl: string;
 };
 declare class ReCaptchaComponent extends React.PureComponent<IProps> {
     private _webViewRef;

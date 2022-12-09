@@ -4,6 +4,7 @@ export declare type IProps = {
     onReceiveToken: (captchaToken: string) => void;
     siteKey: string;
     action: string;
+    baseUrl: string;
 };
 export declare type IState = {};
 declare class ReCaptchaV3 extends React.PureComponent<IProps, IState> {

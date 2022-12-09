@@ -9,6 +9,7 @@ type IProps = {
   onReceiveToken: (captchaToken: string) => void
   siteKey: string
   action: string
+  baseUrl: string
 }
 
 const patchPostMessageJsCode = `(${String(function () {
@@ -21,17 +22,16 @@ const patchPostMessageJsCode = `(${String(function () {
 })})();`
 
 const getExecutionFunction = (siteKey: string, action: string) => {
-  return `window.grecaptcha.execute('${siteKey}', { action: '${action}' }).then(
+  return `window.grecaptcha.enterprise.execute('${siteKey}', { action: '${action}' }).then(
     function(args) {
       window.ReactNativeWebView.postMessage(args);
     }
   )`
 }
 
-const getInvisibleRecaptchaContent = (siteKey: string, action: string) => {
+const getInvisibleRecaptchaContent = (domain: string, siteKey: string, action: string) => {
   return `<!DOCTYPE html><html><head>
-    <script src="https://www.google.com/recaptcha/api.js?render=${siteKey}"></script>
-    <script>window.grecaptcha.ready(function() { ${getExecutionFunction(siteKey, action)} });</script>
+    <script src="${domain}/recaptcha/enterprise.js?render=${siteKey}"></script>
     </head></html>`
 }
 
@@ -59,8 +59,8 @@ class ReCaptchaComponent extends React.PureComponent<IProps> {
         mixedContentMode={'always'}
         injectedJavaScript={patchPostMessageJsCode}
         source={{
-          html: getInvisibleRecaptchaContent(this.props.siteKey, this.props.action),
-          baseUrl: this.props.captchaDomain
+          html: getInvisibleRecaptchaContent(this.props.captchaDomain, this.props.siteKey, this.props.action),
+          baseUrl: this.props.baseUrl
         }}
         onMessage={(e: any) => {
           this.props.onReceiveToken(e.nativeEvent.data)
